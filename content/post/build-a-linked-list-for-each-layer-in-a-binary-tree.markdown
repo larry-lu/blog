@@ -49,7 +49,7 @@ class LinkedList:
         self.val = val
  
     def add(self, val):
-        if self.next == None:
+        if not self.next:
             self.next = LinkedList(val)
         else:
             self.next.add(val)
@@ -95,34 +95,31 @@ My depth function is exactly what you'd expect (recursive):
 
 ```python
 def depth(tree):
-    if tree == None:
+    if not tree:
         return 0
-    if tree.left == None and tree.right == None:
+    if not tree.left and not tree.right:
         return 1
     else:
-        depthLeft = 1+depth(tree.left)
-        depthRight = 1+depth(tree.right)
-        if depthLeft > depthRight:
-            return depthLeft
-        else:
-            return depthRight
+        depth_left = 1+depth(tree.left)
+        depth_right = 1+depth(tree.right)
+        return max(depth_left, depth_right)
 ```
 
 My `tree_to_linked_lists` function does a [pre-order traversal](http://en.wikipedia.org/wiki/Tree_traversal#Pre-order), adding nodes to their corresponding linked list (based on depth) in the dictionary `lists` as the tree is traversed.  `lists` is passed into, and returned from (in its mutated state), each call to `tree_to_linked_lists`.
 
 ```python
 def tree_to_linked_lists(tree, lists={}, d=None):
-    if d == None:
+    if not d:
         d = depth(tree)
-    if lists.get(d) == None:
+    if not lists.get(d):
         lists[d] = LinkedList(tree.val)
     else:
         lists[d].add(tree.val)
         if d == 1:
             return lists
-    if tree.left != None:
+    if tree.left:
         lists = tree_to_linked_lists(tree.left, lists, d-1)
-    if tree.right != None:
+    if tree.right:
         lists = tree_to_linked_lists(tree.right, lists, d-1)
     return lists
 ```
